@@ -357,7 +357,7 @@ namespace BindingRecepies
                             htmlDoc.LoadHtml(data);
 
                             titleNodes = htmlDoc.DocumentNode.DescendantsAndSelf("a").Where(
-                                                                    x => x.Attributes["title"] != null && x.HasChildNodes && x.ParentNode.OriginalName == "h3");
+                                                        x => x.Attributes["title"] != null && x.HasChildNodes && x.ParentNode.OriginalName == "h3");
 
                             descriptions = htmlDoc.DocumentNode.DescendantsAndSelf("p").Where(x => x.HasChildNodes && x.FirstChild.OriginalName == "span");
 
@@ -638,6 +638,20 @@ namespace BindingRecepies
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             await CapturePhoto();
+        }
+
+        private async void searchTextBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            string searchedString = this.searchTextBox.Text;
+
+            SQLiteAsyncConnection dbCon = new SQLiteAsyncConnection(dbName);
+            //string query = "SELECT * FROM Recipe WHERE LOWER(Title) LIKE %" + searchedString.ToLower() + "%";
+            var query = dbCon.Table<Recipe>().Where(x => x.Title.Contains(searchedString));
+            recipes = await query.ToListAsync();
+         
+            //recipes = await dbCon.QueryAsync<Recipe>(query);
+            viewModel.Recipes = recipes;
+            this.listView.ItemsSource = viewModel.Recipes;
         }
     }
 }

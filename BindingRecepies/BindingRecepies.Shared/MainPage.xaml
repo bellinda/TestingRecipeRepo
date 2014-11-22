@@ -20,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="250"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Button Content="Captute Photo" Click="Button_Click"></Button>
@@ -28,10 +29,11 @@
               AudioCategory="BackgroundCapableMedia" 
               Source="Music/music.mp3"
               Grid.Row="0"/>
+        <TextBox Name="searchTextBox" Grid.Row="2" Width="300" KeyUp="searchTextBox_KeyUp"></TextBox>
         <ListView Name="listView" 
                   Background="Transparent"
                   Foreground="White"
-                  Grid.Row="2">
+                  Grid.Row="3">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="FontSize" Value="56"></Setter>
