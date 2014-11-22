@@ -1,0 +1,68 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="BindingRecepies.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BindingRecepies"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <!--<ListView
+            Name="recepiesListBox"
+            ItemsSource="{Binding Recipes}"
+            DisplayMemberPath="Title"
+            Foreground="White"
+            CanReorderItems="True">
+
+        </ListView>-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="250"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Content="Captute Photo" Click="Button_Click"></Button>
+        <Image x:Name="PhotoPreview" Grid.Row="1"/>
+        <MediaElement Name="audioMedia" 
+              AudioCategory="BackgroundCapableMedia" 
+              Source="Music/music.mp3"
+              Grid.Row="0"/>
+        <ListView Name="listView" 
+                  Background="Transparent"
+                  Foreground="White"
+                  Grid.Row="2">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="FontSize" Value="56"></Setter>
+                    <Setter Property="Height" Value="200"></Setter>
+                    <Setter Property="BorderBrush" Value="Gray"></Setter>
+                    <Setter Property="BorderThickness" Value="2"></Setter>
+                    <Setter Property="Padding" Value="0"></Setter>
+                    <Setter Property="Margin" Value="0"></Setter>
+                    <Setter Property="FontFamily" Value="Gabriola"></Setter>  <!--Comic Sans MS-->
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+                            <ColumnDefinition Width="0.7*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image
+                                Grid.Column="0">
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding ImageURL}"/>
+                            </Image.Source>
+                        </Image>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding Title}"></TextBlock>
+                            <TextBlock Text="{Binding Time}" FontSize="35"></TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>
