@@ -30,7 +30,7 @@
               AudioCategory="BackgroundCapableMedia" 
               Source="Music/music.mp3"
               Grid.Row="0"/>
-        <WebView Name="webView" Height="250" Width="300" Grid.Row="2"></WebView>
+        <WebView Name="webView" Height="250" Width="300" Grid.Row="2" NavigationCompleted="webView_NavigationCompleted"></WebView>
         <TextBox Name="searchTextBox" Grid.Row="3" Width="300" KeyUp="searchTextBox_KeyUp"></TextBox>
         <ListView Name="listView" 
                   Background="Transparent"

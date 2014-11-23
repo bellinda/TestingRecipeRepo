@@ -65,6 +65,8 @@ namespace BindingRecepies
 
         public static WebView myWebView;
 
+        public static int navigationCounter = 0;
+
         //private MediaPlayer mediaplayer;
 
         public static MediaCapture mediacapture = new MediaCapture();
@@ -679,20 +681,22 @@ namespace BindingRecepies
             var fb = new FacebookClient();
             Uri loginUrl = fb.GetLoginUrl(parametersTry);
             myWebView.Navigate(new Uri(loginUrl.AbsoluteUri, UriKind.Absolute));
-            myWebView.NavigationCompleted += OnNavigationComplited(fb);
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 10);
-            timer.Start();
-            if(!timer.IsEnabled)
-            {
-                myWebView.Visibility = Visibility.Collapsed;
-                SendNotification("Facebook login", "You are logged successfully", "", "Images/fb-login.png");
-            }
+            
+
+            //myWebView.NavigationCompleted += OnNavigationComplited(fb);
+            //DispatcherTimer timer = new DispatcherTimer();
+            //timer.Interval = new TimeSpan(0, 0, 10);
+            //timer.Start();
+            //if(!timer.IsEnabled)
+            //{
+            //    myWebView.Visibility = Visibility.Collapsed;
+            //    SendNotification("Facebook login", "You are logged successfully", "", "Images/fb-login.png");
+            //}
 
 
             //var imgstream = File.OpenRead(filePath);
 
-            await fb.PostTaskAsync("me/feed?message=Trying to post something on facebook", null);
+            //await fb.PostTaskAsync("me/feed?message=Trying to post something on facebook", null);
             //{
 
             //    message = "trying to add a photo",
@@ -738,11 +742,21 @@ namespace BindingRecepies
 
         }
 
-        private static async Task<TypedEventHandler<WebView, WebViewNavigationCompletedEventArgs>> OnNavigationComplited(FacebookClient fb)
+        //private static async Task<TypedEventHandler<WebView, WebViewNavigationCompletedEventArgs>> OnNavigationComplited(FacebookClient fb)
+        //{
+        //    await fb.PostTaskAsync("me/feed?message=Trying to post something on facebook", null);
+        //    TypedEventHandler<WebView, WebViewNavigationCompletedEventArgs> handler;
+        //    return handler;
+        //}
+
+        private void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            await fb.PostTaskAsync("me/feed?message=Trying to post something on facebook", null);
-            TypedEventHandler<WebView, WebViewNavigationCompletedEventArgs> handler;
-            return handler;
+            navigationCounter++;
+            if(navigationCounter == 2)
+            {
+                myWebView.Visibility = Visibility.Collapsed;
+                SendNotification("Facebook login", "You are logged successfully", "", "Images/fb-login.png");
+            }
         }
     }
 }
