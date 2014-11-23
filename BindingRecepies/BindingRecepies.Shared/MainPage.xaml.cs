@@ -33,6 +33,9 @@ using Windows.Media.MediaProperties;
 using Windows.ApplicationModel.Background;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
+using Facebook;
+using Facebook.Client;
+using System.Dynamic;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -60,9 +63,12 @@ namespace BindingRecepies
 
         public static Image photoPlaceholder;
 
+        public static WebView myWebView;
+
         //private MediaPlayer mediaplayer;
 
         public static MediaCapture mediacapture = new MediaCapture();
+        private static string _ExtendedPermissions;
 
         public MainPage()
         {
@@ -73,6 +79,8 @@ namespace BindingRecepies
             viewModel = new ViewModel();
 
             photoPlaceholder = this.PhotoPreview;
+
+            myWebView = this.webView;
 
             SendNotification("No internet connection!", "Turn it on to see", "a list of restorants near you", "Images/connection.png");
 
@@ -429,7 +437,7 @@ namespace BindingRecepies
                 OptionAutoCloseOnEnd = true
             };
 
-            for (int i = 1; i <= 1; i++)
+            for (int i = 1; i <= 114; i++)
             {
                 string data = await GetResponseString(url + "?page=" + i);
                 htmlDoc.LoadHtml(data);
@@ -538,10 +546,12 @@ namespace BindingRecepies
                 bitmapImage.DecodePixelWidth = 600; //match the target Image.Width, not shown
                 await bitmapImage.SetSourceAsync(fileStream);
                 photoPlaceholder.Source = bitmapImage;
-            } 
+            }
+            
+            SharePhotoInFacebook(photoStorageFile.Path);
         }
 
-        public static void RegisterAudioBackgroundTask()
+        public static async void RegisterAudioBackgroundTask()
         {
             var isTaskRegistered = false;
             var taskName = "BakgroundAudioTask";
@@ -652,6 +662,87 @@ namespace BindingRecepies
             //recipes = await dbCon.QueryAsync<Recipe>(query);
             viewModel.Recipes = recipes;
             this.listView.ItemsSource = viewModel.Recipes;
+        }
+
+        private static async void SharePhotoInFacebook(string filePath)
+        {
+
+            dynamic parametersTry = new ExpandoObject();
+            parametersTry.client_id = "662815490501841";
+            parametersTry.redirect_uri = "https://www.facebook.com/connect/login_success.html";
+            parametersTry.response_type = "token";
+            parametersTry.display = "popup";
+            if(!string.IsNullOrWhiteSpace(_ExtendedPermissions))
+            {
+                parametersTry.scope = _ExtendedPermissions;
+            }
+            var fb = new FacebookClient();
+            Uri loginUrl = fb.GetLoginUrl(parametersTry);
+            myWebView.Navigate(new Uri(loginUrl.AbsoluteUri, UriKind.Absolute));
+            myWebView.NavigationCompleted += OnNavigationComplited(fb);
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 10);
+            timer.Start();
+            if(!timer.IsEnabled)
+            {
+                myWebView.Visibility = Visibility.Collapsed;
+                SendNotification("Facebook login", "You are logged successfully", "", "Images/fb-login.png");
+            }
+
+
+            //var imgstream = File.OpenRead(filePath);
+
+            await fb.PostTaskAsync("me/feed?message=Trying to post something on facebook", null);
+            //{
+
+            //    message = "trying to add a photo",
+            //    file = new FacebookMediaStream
+            //    {
+            //        ContentType = "image/jpg",
+            //        FileName = Path.GetFileName(filePath)
+
+            //    }.SetValue(imgstream)
+
+
+            //});
+
+
+
+            fb.AppId = "662815490501841";
+            fb.AppSecret = "8db5f3acd5ff48acc1d436d30d8409fa";
+            dynamic loginParams = new ExpandoObject();
+            loginParams.AppId = "662815490501841";
+            loginParams.AppSecret = "8db5f3acd5ff48acc1d436d30d8409fa";
+            loginParams.redirect_url = "http://localhost/Facebook/oauth/oauth-redirect.aspx";
+
+            var loginUri = fb.GetLoginUrl(loginParams);
+
+            //login
+            //var fbSessionCLient = new FacebookSessionClient(fb.AppId);
+            //fbSessionCLient.LoginAsync("user_about_me,read_stream,publish_stream,manage_pages");
+
+            //var client = new FacebookClient(fbSessionCLient.CurrentSession.AccessToken);
+            //string access_token = client.AccessToken;
+            //client = new FacebookClient(access_token);
+
+            //var mediaObject = new FacebookMediaObject
+            //{
+            //    FileName = System.IO.Path.GetFileName(filePath),
+            //    ContentType = "image/jpg"
+            //};
+
+            //dynamic parameters = new ExpandoObject();
+            //parameters.source = mediaObject;
+            //parameters.message = "photo?";
+            //parameters.access_token = access_token;
+
+        }
+
+        private static async Task<TypedEventHandler<WebView, WebViewNavigationCompletedEventArgs>> OnNavigationComplited(FacebookClient fb)
+        {
+            await fb.PostTaskAsync("me/feed?message=Trying to post something on facebook", null);
+            TypedEventHandler<WebView, WebViewNavigationCompletedEventArgs> handler;
+            return handler;
         }
     }
 }

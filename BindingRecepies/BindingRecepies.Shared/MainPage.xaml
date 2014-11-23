@@ -20,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"></RowDefinition>
             <RowDefinition Height="250"></RowDefinition>
+            <RowDefinition Height="250"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
@@ -29,11 +30,12 @@
               AudioCategory="BackgroundCapableMedia" 
               Source="Music/music.mp3"
               Grid.Row="0"/>
-        <TextBox Name="searchTextBox" Grid.Row="2" Width="300" KeyUp="searchTextBox_KeyUp"></TextBox>
+        <WebView Name="webView" Height="250" Width="300" Grid.Row="2"></WebView>
+        <TextBox Name="searchTextBox" Grid.Row="3" Width="300" KeyUp="searchTextBox_KeyUp"></TextBox>
         <ListView Name="listView" 
                   Background="Transparent"
                   Foreground="White"
-                  Grid.Row="3">
+                  Grid.Row="4">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="FontSize" Value="56"></Setter>

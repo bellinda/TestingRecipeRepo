@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Images\connection.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\fb-login.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\image.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\photo.png" />
     <Content Include="$(MSBuildThisFileDirectory)Music\music.mp3" />
